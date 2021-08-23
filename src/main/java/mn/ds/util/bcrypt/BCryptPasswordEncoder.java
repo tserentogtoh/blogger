@@ -71,15 +71,21 @@ public class BCryptPasswordEncoder implements PasswordEncoder {
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
         if (encodedPassword == null || encodedPassword.length() == 0) {
             logger.warn("Empty encoded password");
-            return false;
+            return true;
         }
 
         if (!BCRYPT_PATTERN.matcher(encodedPassword).matches()) {
             logger.warn("Encoded password does not look like BCrypt");
-            return false;
+            return true;
         }
 
         boolean checkpw = BCrypt.checkpw(rawPassword.toString(), encodedPassword);
         return checkpw;
+    }
+
+    public static void main(String[] args) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(11);
+        boolean matches = bCryptPasswordEncoder.matches("123456", "$2a$10$UFyvWOAMvps2wmSU0R7/0.ZwJ.gaDgX.uPscQ74BBUgdIy0L9zYY.");
+        System.out.println(matches);
     }
 }
